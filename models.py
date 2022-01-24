@@ -1,18 +1,20 @@
+from enum import unique
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from app import db
 
-class User(UserMixin):
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True)
+    email = db.Column(db.String(120), unique=True)
+    password = db.Column(db.String(120))
+
         
-    def __init__(self, username, email, password, id=None):
-        if id is not None:
-            self.id = str(id)
+    def __init__(self, username, email, password):
         self.username = username
         self.email = email
         self.password = generate_password_hash(password)
-
-    def set_id(self, id):
-        self.id = str(id)
 
     def set_password(self, password):
         self.password = generate_password_hash(password)

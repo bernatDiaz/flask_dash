@@ -1,7 +1,10 @@
 import flask
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_login import LoginManager, login_manager, login_required, logout_user, login_user, current_user
 from werkzeug.urls import url_parse
+
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 import dash
 import dash_core_components as dcc
@@ -10,10 +13,8 @@ import plotly.express as px
 import pandas as pd
 
 from flask_mysqldb import MySQL
-import MySQLdb.cursors
-import re
+from flask_sqlalchemy import SQLAlchemy
 
-from models import User
 from forms import SignupForm, LoginForm
 
 server = Flask(__name__)
@@ -49,22 +50,31 @@ app.layout = html.Div(children=[
         figure=fig
     )
 ])
+server.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://CjCNFuXROa:bMaWoiEpBj@remotemysql.com/CjCNFuXROa'
 server.secret_key = 'asdfghijklmnopqrstu'
+'''
 server.config['MYSQL_HOST'] = 'remotemysql.com'
 server.config['MYSQL_USER'] = 'CjCNFuXROa'
 server.config['MYSQL_PASSWORD'] = 'bMaWoiEpBj'
 server.config['MYSQL_DB'] = 'CjCNFuXROa'
+'''
+db = SQLAlchemy(server)
 
-mysql = MySQL(server)
+from models import User
+
+db.create_all()
+
+server.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
+
+admin = Admin(server, name='microblog', template_mode='bootstrap3')
+admin.add_view(ModelView(User, db.session))
 
 @login_manager.user_loader
 def load_user(user_id):
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM accounts WHERE id = %s', (int(user_id),))
-    account = cursor.fetchone()
-    mysql.connection.commit()
-    if(account):
-        return User(account["username"],account["email"], account["password"], user_id)
+    User.query.all()
+    user = User.query.filter_by(id=user_id).first()
+    if(user):
+        return user
     else:
         return None
 
@@ -85,19 +95,20 @@ def login():
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
-        username = form.username
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE username = %s', (username,))
-        account = cursor.fetchone()
-        mysql.connection.commit()
-        if account is not None:
-            user = User(account.username, account.email, account.password, account.id)
-            if user.check_password(form.password):
+        username = form.username.data
+        User.query.all()
+        user = User.query.filter_by(username=username).first()
+        if user is not None:
+            if user.check_password(form.password.data):
                 login_user(user, remember=form.remember_me.data)
                 next_page = request.args.get('next')
                 if not next_page or url_parse(next_page).netloc != '':
                     next_page = url_for('index')
                 return redirect(next_page)
+            else:
+                flash('Incorrect password')
+        else:
+            flash('User does not exist')
     return render_template('login_form.html', form=form)
 
 @server.route("/signup/", methods=["GET", "POST"])
@@ -108,20 +119,16 @@ def signup():
         email = form.email.data
         password = form.password.data
 
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM accounts WHERE username = %s', (username,))
-        account = cursor.fetchone()
+        User.query.all()
+        userExisting = User.query.filter_by(username=username).first()
 
-        if account:
+        if userExisting:
             print("account already exists")
-            mysql.connection.commit()
         else:
             user = User(username,email,password)
-            cursor.execute('INSERT INTO accounts VALUES (NULL, %s, %s, %s)', (username, password, email,))
-            id = mysql.connection.insert_id()
-            user.set_id(id)
+            db.session.add(user)
+            db.session.commit()
 
-            mysql.connection.commit()
             login_user(user, remember=True)
 
             next = request.args.get('next', None)
@@ -137,3 +144,6 @@ def logout():
    return redirect(url_for('login'))
 
 login_manager.login_view = "login"
+
+if __name__ == '__main__':
+      server.run(host='0.0.0.0')
