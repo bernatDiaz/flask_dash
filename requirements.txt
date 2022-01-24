@@ -5,7 +5,6 @@ beautifulsoup4==4.10.0
 blinker==1.4
 boto3==1.20.41
 Brotli==1.0.9
-cdecimal
 cftime==1.5.2
 closure_soy==20121221
 coloredlogs==15.0.1
