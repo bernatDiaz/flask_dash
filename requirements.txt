@@ -64,7 +64,6 @@ Pillow==9.0.0
 pymongo==4.0.1
 pyOpenSSL==21.0.0
 pyperf==2.3.0
-PyQt4==4.11.4
 PyQt5==5.15.6
 pysqlcipher3==1.0.4
 pysqlite==2.8.3
