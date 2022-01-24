@@ -85,7 +85,6 @@ sqlalchemy_enum34==2.0.0
 sqlalchemy_utils==0.38.2
 sqlcipher3==0.4.5
 statsmodels==0.13.1
-Sybase==0.35
 tables==3.7.0
 tablib==3.1.0
 traitlets==5.1.1
