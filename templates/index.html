@@ -3,5 +3,7 @@
 {% block title %}Index{% endblock %}
 
 {% block content %}
+{% if current_user.is_authenticated %}
 <h1>Hello {{user.username}}</h1>
+{% endif %}
 {% endblock %}

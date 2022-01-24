@@ -9,12 +9,16 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(80), unique=True)
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(120))
+    admin = db.Column(db.Boolean, unique=False, default=False)
+    plot_access = db.Column(db.Boolean, unique=False, default=False)
 
         
-    def __init__(self, username, email, password):
+    def __init__(self, username, email, password, admin=False, plot_access=False):
         self.username = username
         self.email = email
         self.password = generate_password_hash(password)
+        self.admin = admin
+        self.plot_access = plot_access
 
     def set_password(self, password):
         self.password = generate_password_hash(password)

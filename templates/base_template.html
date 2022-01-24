@@ -29,19 +29,26 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/admin"> Admin</a>
                 </li>
+                {% if current_user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{url_for('logout')}}"> Logout</a>
                 </li>
+                {% endif %}
             </ul>
         </div>
     </nav>
-{% block content %}{% endblock %}
-{% with messages = get_flashed_messages() %}
-{% if messages %}
+    {% block content %}{% endblock %}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
     <div class="alert alert-danger" role="alert">
         {{ messages[0] }}.
     </div>
-{% endif %}
-{% endwith %}
+    {% endif %}
+    {% endwith %}
+    <div>
+        <p>username: user1 password:user1 can access plot, cannot access admin</p>
+        <p>username: user2 password:user2 cannot access plot, cannot access admin</p>
+        <p>username: admin password:admin cannot access plot, can access admin</p>
+    </div>
 </body>
 </html>

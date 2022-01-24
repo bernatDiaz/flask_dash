@@ -4,7 +4,8 @@ from flask_login import LoginManager, login_manager, login_required, logout_user
 from werkzeug.urls import url_parse
 
 from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
+
+from views import AdminModelView
 
 import dash
 import dash_core_components as dcc
@@ -17,6 +18,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 from forms import SignupForm, LoginForm
 
+from decorators import plot_access_required
+
 server = Flask(__name__)
 app = dash.Dash(__name__, server=server, url_base_pathname='/hidden-plot/')
 login_manager = LoginManager()
@@ -25,7 +28,7 @@ login_manager.init_app(server)
 def protect_views(app):
     for view_func in app.server.view_functions:
         if view_func.startswith(app.config["url_base_pathname"]):
-            app.server.view_functions[view_func] = login_required(app.server.view_functions[view_func])
+            app.server.view_functions[view_func] = plot_access_required(login_required(app.server.view_functions[view_func]))
     return app
 
 app = protect_views(app)
@@ -67,7 +70,7 @@ db.create_all()
 server.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
 
 admin = Admin(server, name='microblog', template_mode='bootstrap3')
-admin.add_view(ModelView(User, db.session))
+admin.add_view(AdminModelView(User, db.session))
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -79,6 +82,7 @@ def load_user(user_id):
         return None
 
 @server.route('/plot/')
+@plot_access_required
 @login_required
 def plot():
     return flask.redirect('/hidden-plot/')
