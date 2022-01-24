@@ -80,7 +80,6 @@ selenium==4.1.0
 sets==0.3.2
 Shapely==1.8.0
 simplejson==3.17.6
-skimage==0.0
 sniffio==1.2.0
 sqlalchemy_enum34==2.0.0
 sqlalchemy_utils==0.38.2
