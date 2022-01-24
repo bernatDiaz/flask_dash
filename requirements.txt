@@ -3,7 +3,7 @@ AppKit==0.2.8
 asgiref==3.5.0
 beautifulsoup4==4.10.0
 blinker==1.4
-boto3==1.20.41
+boto3
 Brotli==1.0.9
 cftime==1.5.2
 closure_soy==20121221
