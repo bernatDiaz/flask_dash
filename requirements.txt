@@ -97,7 +97,6 @@ vincent==0.4.4
 watchdog==2.1.6
 WebOb==1.8.7
 wincertstore
-wmi==1.5.1
 wtf_peewee==3.0.3
 wtforms_appengine==0.1
 xarray==0.20.2
