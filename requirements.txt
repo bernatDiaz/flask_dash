@@ -17,7 +17,7 @@ cycler==0.11.0
 Cython==0.29.26
 dask==2022.1.0
 diskcache==5.4.0
-djangorestframework==3.13.1
+djangorestframework
 dl==0.1.0
 docutils==0.18.1
 dogpile.core==0.4.1
@@ -31,7 +31,7 @@ flask_cdn==1.5.3
 flask_mongoengine==1.0.0
 flask_s3==0.3.3
 flask_script==2.0.6
-Foundation==0.1.0a0.dev1
+Foundation
 fsspec==2022.1.0
 funcsigs==1.0.2
 genapi==0.0.8
