@@ -3,7 +3,6 @@ AppKit==0.2.8
 asgiref==3.5.0
 beautifulsoup4==4.10.0
 blinker==1.4
-boto3
 Brotli==1.0.9
 cftime==1.5.2
 closure_soy==20121221
@@ -17,7 +16,6 @@ cycler==0.11.0
 Cython==0.29.26
 dask==2022.1.0
 diskcache==5.4.0
-djangorestframework
 dl==0.1.0
 docutils==0.18.1
 dogpile.core==0.4.1
@@ -31,7 +29,6 @@ flask_cdn==1.5.3
 flask_mongoengine==1.0.0
 flask_s3==0.3.3
 flask_script==2.0.6
-Foundation
 fsspec==2022.1.0
 funcsigs==1.0.2
 genapi==0.0.8
@@ -58,9 +55,7 @@ peewee==3.14.8
 pep562==1.1
 percy==2.0.2
 pgdb==0.0.11
-pickle5
 Pillow==9.0.0
-pymongo
 pyOpenSSL==21.0.0
 pyperf==2.3.0
 PyQt5==5.15.6
@@ -93,7 +88,6 @@ uWSGI==2.0.20
 vincent==0.4.4
 watchdog==2.1.6
 WebOb==1.8.7
-wincertstore
 wtf_peewee==3.0.3
 wtforms_appengine==0.1
 xarray==0.20.2
